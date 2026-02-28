@@ -128,6 +128,12 @@
         let currentPlayer = "X"; // <--- ADDED: start with X
         const moves = ["X", "O", "O", "X", "X", "-", "O", "-", "-"];
         const winConditions = ['XOO', "XX", "OOO", "XXX", "XOX", "OXO", "XXO", "OXX", "OOX", "X--", "O--"];
+        const cards = document.querySelectorAll(".box"); // sq0..sq8
+        const moves_2 = Array.from(cards).map(sq => {
+    const val = sq.innerText.trim();
+    return val === "" ? "-" : val;
+});
+
 
         // <--- ADDED: randomly choose a player to start (this can be removed if you want X to always start)
         if (Math.random() < 0.5) {
