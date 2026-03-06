@@ -1,4 +1,132 @@
-<!DOCTYPE html>
+<script>
+    const NUM_SQUARES = 9;
+    let currentPlayer = "X";
+    let board = Array(NUM_SQUARES).fill(""); // holds "X", "O", or ""
+
+    // all winning index combinations (reusing your name winConditions)
+    const winConditions = [
+        [0, 1, 2], // rows
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6], // columns
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8], // diagonals
+        [2, 4, 6]
+    ];
+
+    // randomly choose starting player (you had this behavior)
+    if (Math.random() < 0.5) {
+        currentPlayer = "X";
+    } else {
+        currentPlayer = "O";
+    }
+
+    window.onload = function () {
+        const container = document.querySelector(".container"); // your board container
+        const message = document.getElementById("x-turn");      // your status message
+        const StartGame = document.getElementById("Start Game"); // your Start Game button
+        const button_1 = document.getElementById("button_1");   // your X's Turn Start div
+
+        message.innerText = currentPlayer + " Turn to start";
+
+        // 1. Create the 9 squares: card_0 ... card_8
+        for (let i = 0; i < NUM_SQUARES; i++) {
+            let id = "card_" + i;
+            let cards = document.createElement("div");
+            cards.className = "box";
+            cards.id = id;
+            cards.dataset.index = i; // so we know which index this square is
+
+            // 2. Add click event to each square
+            cards.addEventListener("click", onCardClick);
+
+            container.appendChild(cards);
+        }
+
+        // 3. Start / Restart button
+        if (StartGame) {
+            StartGame.addEventListener("click", StartGameReset, false);
+        }
+
+        // 4. Your existing "X's Turn Start" area: just updates message text
+        if (button_1) {
+            button_1.addEventListener("click", function () {
+                message.innerText = "You will Find O on the 6th Card/Square!";
+            });
+        }
+    };
+
+    // called when a card (card_0 ... card_8) is clicked
+    function onCardClick(event) {
+        const message = document.getElementById("x-turn");
+        const cards = event.currentTarget;
+        const index = parseInt(cards.dataset.index, 10);
+
+        // ignore clicks if game is already over
+        if (isGameOver()) return;
+
+        // ignore click if square already filled
+        if (board[index] !== "") return;
+
+        // put current player's symbol in the square and in board array
+        board[index] = currentPlayer;
+        cards.textContent = currentPlayer;
+
+        // check for win
+        if (checkWin(currentPlayer)) {
+            alert("Congratulations! " + currentPlayer + " Wins!");
+            message.innerText = currentPlayer + " Wins! Click Start / Restart Game to play again.";
+            return;
+        }
+
+        // check for tie
+        if (board.every(cell => cell !== "")) {
+            alert("It's a Tie! You Both Win?...hug it out!");
+            message.innerText = "It's a Tie! Click Start / Restart Game to play again.";
+            return;
+        }
+
+        // switch player and update message
+        currentPlayer = (currentPlayer === "X") ? "O" : "X";
+        message.innerText = currentPlayer + " Turn";
+    }
+
+    // check if the given player has any winning line
+    function checkWin(player) {
+        return winConditions.some(line =>
+            line.every(index => board[index] === player)
+        );
+    }
+
+    // game over if X or O has won, or board is full
+    function isGameOver() {
+        return checkWin("X") || checkWin("O") || board.every(cell => cell !== "");
+    }
+
+    // This function matches your original name: StartGameReset
+    function StartGameReset() {
+        const message = document.getElementById("x-turn");
+        const allCards = document.querySelectorAll(".box");
+
+        // clear board state
+        board = Array(NUM_SQUARES).fill("");
+
+        // clear UI
+        allCards.forEach(card => {
+            card.textContent = "";
+        });
+
+        // optionally randomize who starts each time
+        if (Math.random() < 0.5) {
+            currentPlayer = "X";
+        } else {
+            currentPlayer = "O";
+        }
+
+        message.innerText = currentPlayer + " Turn to start";
+    }
+</script><!DOCTYPE html>
 <html lang="en">
 
 <head>
