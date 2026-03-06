@@ -126,9 +126,21 @@
 
         NUM_SQUARES = 9;
         let currentPlayer = "X"; // <--- ADDED: start with X
-        const moves = ["-", "-", "-", "-", "-", "-","-", "-", "-"];
-        const winConditions = ['-12', "XX", "OOO", "XXX", "XOX", "OXO", "XXO", "OXX", "OOX", "X--", "O--"];
-
+        const winConditions = ['XOO', "XX", "OOO", "XXX", "XOX", "OXO", "XXO", "OXX", "OOX", "X--", "O--"];
+        //map() method , create a new array called moves with the current X or O value that is in the corresponding square – 
+        const moves = winConditions.map(condition => {
+            // This is just a placeholder logic to determine the move based on the condition
+            // In a real implementation, you would check the actual board state to determine the move
+            if (condition.includes("X")) {
+                return "X";
+            } else if (condition.includes("O")) {
+                return "O";
+            } else {
+                return "-"; // empty square
+            }
+        });
+       
+       
         // <--- ADDED: randomly choose a player to start (this can be removed if you want X to always start)
         if (Math.random() < 0.5) {
             currentPlayer = "X";
@@ -165,16 +177,6 @@
                     // (first we switch players, then show it)
                     currentPlayer = (currentPlayer === "X") ? "O" : "X"; // <--- ADDED: switch turn
                     message.innerText = currentPlayer + " Turn";        // <--- ADDED: show whose turn
-                
-                
-            
-                    moves.map( function movesArray() {
-
-
-
-                
-            }; );
-                
                 }
                 );
                 // <--- ADDED: add the square to the container
@@ -183,14 +185,17 @@
             // 3. Add event listener to the X's Turn button
             const cardClick = document.getElementById("button_1");
 
-
             function writeX() {
                 // This function will be called when the X's Turn button is clicked
                 message.innerText = "You will Find O on the 6th Card/Square!";
             }
 
-
-            
+            // Check if the button exists before adding the event listener
+            if (cardClick) {
+                cardClick.addEventListener("click", function () {
+                    writeX();
+                });
+            };
         }
         //this if statement identifies the winning conditions for the game. If the player has 3 in a row, they win. If the player has 3 in a row, they lose. If the player has 3 in a row, it's a tie.
         if (winConditions.includes("XXX")) {
